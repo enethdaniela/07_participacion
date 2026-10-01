@@ -1,50 +1,48 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Constitución del Divisor de Cuenta
 
-## Core Principles
+## Principios fundamentales
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Principio de responsabilidad única (SRP)
+Cada clase DEBE tener una sola razón para cambiar. El cálculo NO DEBE validar entradas ni
+formatear resultados; la validación y el formato son responsabilidades separadas.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Principio abierto/cerrado (OCP)
+Agregar una regla de redondeo NO DEBE requerir editar las clases de cálculo existentes. El
+comportamiento de redondeo DEBE proporcionarse mediante una abstracción que admita nuevas
+estrategias.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Principio de sustitución de Liskov (LSP)
+Cualquier implementación de una interfaz DEBE poder sustituir a otra sin que quien la use
+tenga que comprobar el tipo concreto.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Principio de segregación de interfaces (ISP)
+Las interfaces DEBEN ser pequeñas. Una clase NO DEBE depender de métodos que no utiliza.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Principio de inversión de dependencias (DIP)
+`presentation` DEBE depender de abstracciones de `domain` y NO DEBE depender de
+implementaciones concretas de `data`.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Arquitectura y seguridad
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- La aplicación DEBE usar las capas `presentation`, `domain` y `data`.
+- Las dependencias DEBEN seguir `presentation -> domain <- data`.
+- `lib/domain/` DEBE ser Dart puro y NO DEBE importar `package:flutter`.
+- `main.dart` DEBE ser el único lugar donde se instancian implementaciones concretas.
+- NO SE DEBEN guardar secretos ni claves API en el repositorio.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Calidad, pruebas y regla de la materia
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- La funcionalidad crítica DEBE tener pruebas automatizadas.
+- Los criterios de aceptación de cada especificación DEBEN convertirse en pruebas ejecutables.
+- El estudiante DEBE poder explicar cada función generada por el agente: qué hace, por qué
+  existe, qué recibe, qué devuelve y qué errores produce.
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+## Gobernanza
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+Esta constitución rige las decisiones de implementación y revisión del proyecto. Cambiar
+estas reglas requiere la aprobación de la persona propietaria del proyecto, una justificación
+documentada y una actualización de versión semántica: MAJOR para cambios incompatibles,
+MINOR para reglas nuevas o ampliadas sustancialmente y PATCH para aclaraciones que no cambian
+la intención. Los cambios al código de la aplicación DEBEN revisarse según estas reglas.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Versión**: 1.0.0 | **Ratificada**: 2026-10-01 | **Última modificación**: 2026-10-01
