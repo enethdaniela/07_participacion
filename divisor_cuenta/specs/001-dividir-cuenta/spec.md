@@ -79,8 +79,8 @@ comprobar el mensaje especificado y que no se muestra ningún resultado.
 
 - **Cuenta**: el monto total, el número de personas y el porcentaje de propina que ingresa
   quien usa la app.
-- **Reparto**: el pago resultante por persona, expresado con dos decimales según el modo
-  de redondeo elegido.
+- **Resultado**: el pago por persona calculado a partir de una Cuenta y del modo de
+  redondeo elegido; se presenta con dos decimales.
 
 ## Criterios de éxito
 
@@ -95,7 +95,8 @@ comprobar el mensaje especificado y que no se muestra ningún resultado.
 
 ## Suposiciones
 
-- El modo exacto presenta el resultado con dos decimales, tal como se indica en la solicitud.
+- El modo exacto conserva el cociente del reparto y lo presenta con dos decimales; no lo
+  redondea al entero siguiente.
 - El modo hacia arriba redondea el pago individual al entero siguiente; esto se desprende
   del resultado 4.00 indicado para 10.00 dividido entre 3.
 - La propina se calcula como porcentaje del monto total antes de dividir entre las personas;
