@@ -1,18 +1,18 @@
 # Bitácora de comparación: rama vibe vs rama sdd
 
-Estado actual: la Parte 1 está completada y se implementó la primera app en la rama `vibe`. Para esa rama se usó únicamente la solicitud inicial: "Hazme una app en Flutter para dividir la cuenta entre varias personas." En `sdd` se completaron las Partes 3.1–3.3, 4.1–4.3, 5, 6.1–6.2 y 7.1–7.4; falta la implementación.
+Estado actual: la Parte 1 está completada y se implementó la primera app en la rama `vibe`. Para esa rama se usó únicamente la solicitud inicial: "Hazme una app en Flutter para dividir la cuenta entre varias personas." En `sdd` se completaron las Partes 3.1–3.3, 4.1–4.3, 5, 6.1–6.2, 7.1–7.4 y 8.
 
 | | rama vibe | rama sdd |
 |---|---|---|
 | Iteraciones (veces que le tuviste que volver a pedir algo) | 0 | Pendiente |
-| Casos de aceptación que cumple (0–6) | Pendiente de evaluar | Pendiente |
-| Pruebas automatizadas que pasan | 1 widget test | Pendiente |
-| Archivos en `lib/` | 1 | Pendiente |
-| Líneas de código en `lib/` | 288 | Pendiente |
-| ¿`domain/` depende de Flutter? | No existe `domain/` | Pendiente |
-| ¿Existe separación `presentation/domain/data`? | No | Pendiente |
-| ¿El agente agregó algo que nadie pidió? | No; solo reparto básico | Pendiente |
-| ¿Se puede agregar otra estrategia sin modificar el cálculo existente? | No; el cálculo está integrado en la pantalla | Pendiente |
+| Casos de aceptación que cumple (0–6) | Pendiente de evaluar | 6/6 |
+| Pruebas automatizadas que pasan | 1 widget test | 10 |
+| Archivos en `lib/` | 1 | 11 |
+| Líneas de código en `lib/` | 288 | 485 |
+| ¿`domain/` depende de Flutter? | No existe `domain/` | No |
+| ¿Existe separación `presentation/domain/data`? | No | Sí |
+| ¿El agente agregó algo que nadie pidió? | No; solo reparto básico | No; se implementó lo definido en la especificación |
+| ¿Se puede agregar otra estrategia sin modificar el cálculo existente? | No; el cálculo está integrado en la pantalla | Sí |
 
 | Métrica secundaria opcional | rama vibe | rama sdd |
 |---|---:|---:|
@@ -37,4 +37,9 @@ Nota de la Parte 1:
 - Parte 7.1: se creó `specs/001-dividir-cuenta/plan.md` junto con investigación, modelo de datos, contrato de pantalla y guía de validación. El plan usa Flutter estable, dependencias actuales, `setState` y las capas/responsabilidades pedidas. Gate de Constitución aprobado; no se identificaron dudas técnicas pendientes.
 - Parte 7.2 (opcional): se creó `specs/001-dividir-cuenta/checklists/arquitectura.md` con 9 preguntas de revisión de calidad de requisitos; se dejaron sin marcar para evaluación del estudiante.
 - Parte 7.3: se generó `specs/001-dividir-cuenta/tasks.md` con 27 tareas numeradas: 10 para US1, 5 para US2, 5 de preparación/fundamentos y 7 de pulido/validación. Incluye oportunidades paralelas y criterios de prueba independiente. No se implementó código.
-- Parte 7.4: el análisis de coherencia detectó una diferencia terminológica entre `Reparto` y `Resultado`, y que no había una tarea explícita para comprobar ausencia de red y base de datos. Con autorización del estudiante, se unificó la entidad como `Resultado`, se aclaró que el modo exacto no eleva al entero siguiente y se añadió T027 con una verificación de arquitectura sin red/base de datos. Cambios pendientes de revisión antes del commit.
+- Parte 7.4: el análisis de coherencia detectó una diferencia terminológica entre `Reparto` y `Resultado`, y que no había una tarea explícita para comprobar ausencia de red y base de datos. Con autorización del estudiante, se unificó la entidad como `Resultado`, se aclaró que el modo exacto no eleva al entero siguiente y se añadió T027 con una verificación de arquitectura sin red/base de datos. Los cambios de planificación se confirmaron en `98e53fa`.
+- Parte 8: se implementaron las entidades y reglas de dominio sin importar Flutter, las dos estrategias sustituibles, el controlador y la pantalla con entradas para monto, personas y propina. `main.dart` compone las implementaciones concretas.
+- Cobertura de aceptación en SDD: los seis escenarios de la especificación están representados en los datos de prueba y las pruebas de dominio; las pruebas de pantalla verifican el cálculo principal y ambos errores sin resultado.
+- Verificación SDD: `flutter analyze` sin issues; `flutter test` con 10 pruebas aprobadas; `flutter build apk --debug` exitoso. No se modificó `pubspec.yaml`; la búsqueda de arquitectura confirmó que no hay imports Flutter en `domain/`, las estrategias concretas solo se crean en `main.dart`, el cálculo no inspecciona sus tipos y no se agregaron red, base de datos ni dependencias.
+- Métricas de implementación SDD: 11 archivos Dart y 485 líneas en `lib/`. La cantidad de iteraciones y la comparación final de ambas ramas quedan pendientes de la evaluación global.
+- La revisión documental de `checklists/arquitectura.md` quedó completa (9/9); las tareas de implementación/validación T001–T027 están completadas.

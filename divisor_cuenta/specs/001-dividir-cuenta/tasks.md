@@ -25,16 +25,16 @@ implementarse y probarse de manera independiente.
 
 **Propósito**: Preparar los directorios de la funcionalidad en la aplicación Flutter existente.
 
-- [ ] T001 Crear los directorios `lib/domain/`, `lib/data/` y `lib/presentation/` de acuerdo con `specs/001-dividir-cuenta/plan.md`.
+- [X] T001 Crear los directorios `lib/domain/`, `lib/data/` y `lib/presentation/` de acuerdo con `specs/001-dividir-cuenta/plan.md`.
 
 ## Fase 2: Fundamentos
 
 **Propósito**: Establecer entidades y el contrato de estrategia que necesita el cálculo y ambas historias.
 
-- [ ] T002 [P] Crear la entidad Cuenta con monto decimal, personas enteras (mínimo 1) y porcentaje de propina decimal (incluye 0) en `lib/domain/cuenta.dart`.
-- [ ] T003 [P] Crear el tipo Resultado con el monto calculado por persona en `lib/domain/resultado.dart`.
-- [ ] T004 Definir EstrategiaRedondeo con un único método que recibe un pago y devuelve el pago redondeado en `lib/domain/estrategia_redondeo.dart`.
-- [ ] T005 Implementar ValidarEntrada para analizar monto y personas y producir los mensajes exactos para cero personas o monto no numérico en `lib/domain/validar_entrada.dart`.
+- [X] T002 [P] Crear la entidad Cuenta con monto decimal, personas enteras (mínimo 1) y porcentaje de propina decimal (incluye 0) en `lib/domain/cuenta.dart`.
+- [X] T003 [P] Crear el tipo Resultado con el monto calculado por persona en `lib/domain/resultado.dart`.
+- [X] T004 Definir EstrategiaRedondeo con un único método que recibe un pago y devuelve el pago redondeado en `lib/domain/estrategia_redondeo.dart`.
+- [X] T005 Implementar ValidarEntrada para analizar monto y personas y producir los mensajes exactos para cero personas o monto no numérico en `lib/domain/validar_entrada.dart`.
 
 **Punto de control**: Las entidades y abstracción de dominio están disponibles; el dominio no importa Flutter.
 
@@ -46,19 +46,19 @@ implementarse y probarse de manera independiente.
 
 ### Pruebas de la historia de usuario 1
 
-- [ ] T006 [P] [US1] Traducir los cuatro casos válidos de `specs/001-dividir-cuenta/spec.md` a datos esperados en `test/casos_de_prueba.dart`.
-- [ ] T007 [US1] Crear pruebas de los casos válidos y sustitución de estrategias mediante el contrato de EstrategiaRedondeo en `test/division_test.dart`.
-- [ ] T008 [P] [US1] Crear la prueba de widget del cálculo 100, 4 personas, 10% que debe mostrar 27.50 en `test/pantalla_test.dart`.
+- [X] T006 [P] [US1] Traducir los cuatro casos válidos de `specs/001-dividir-cuenta/spec.md` a datos esperados en `test/casos_de_prueba.dart`.
+- [X] T007 [US1] Crear pruebas de los casos válidos y sustitución de estrategias mediante el contrato de EstrategiaRedondeo en `test/division_test.dart`.
+- [X] T008 [P] [US1] Crear la prueba de widget del cálculo 100, 4 personas, 10% que debe mostrar 27.50 en `test/pantalla_test.dart`.
 
 ### Implementación de la historia de usuario 1
 
-- [ ] T009 [P] [US1] Implementar RedondeoExacto como implementación sustituible de EstrategiaRedondeo en `lib/data/redondeo_exacto.dart`.
-- [ ] T010 [P] [US1] Implementar RedondeoHaciaArriba para llevar el pago individual al entero siguiente en `lib/data/redondeo_hacia_arriba.dart`.
-- [ ] T011 [US1] Implementar CalcularDivision para aplicar la propina al monto, dividir entre personas y delegar el redondeo sin inspeccionar clases concretas en `lib/domain/calcular_division.dart`.
-- [ ] T012 [US1] Implementar FormateadorMoneda para presentar el resultado con dos decimales en `lib/presentation/formateador_moneda.dart`.
-- [ ] T013 [US1] Implementar DivisorController con CalcularDivision y ValidarEntrada recibidos por constructor, sin dependencias concretas de data, y recibir la EstrategiaRedondeo elegida al calcular en `lib/presentation/divisor_controller.dart`.
-- [ ] T014 [US1] Crear PantallaDivisor con entradas para monto, personas, propina y modo; recibir estrategias mediante la abstracción de dominio, usar estado local con setState y presentar el cálculo en `lib/presentation/pantalla_divisor.dart`.
-- [ ] T015 [US1] Conectar la pantalla y construir las implementaciones concretas únicamente desde `lib/main.dart`.
+- [X] T009 [P] [US1] Implementar RedondeoExacto como implementación sustituible de EstrategiaRedondeo en `lib/data/redondeo_exacto.dart`.
+- [X] T010 [P] [US1] Implementar RedondeoHaciaArriba para llevar el pago individual al entero siguiente en `lib/data/redondeo_hacia_arriba.dart`.
+- [X] T011 [US1] Implementar CalcularDivision para aplicar la propina al monto, dividir entre personas y delegar el redondeo sin inspeccionar clases concretas en `lib/domain/calcular_division.dart`.
+- [X] T012 [US1] Implementar FormateadorMoneda para presentar el resultado con dos decimales en `lib/presentation/formateador_moneda.dart`.
+- [X] T013 [US1] Implementar DivisorController con CalcularDivision y ValidarEntrada recibidos por constructor, sin dependencias concretas de data, y recibir la EstrategiaRedondeo elegida al calcular en `lib/presentation/divisor_controller.dart`.
+- [X] T014 [US1] Crear PantallaDivisor con entradas para monto, personas, propina y modo; recibir estrategias mediante la abstracción de dominio, usar estado local con setState y presentar el cálculo en `lib/presentation/pantalla_divisor.dart`.
+- [X] T015 [US1] Conectar la pantalla y construir las implementaciones concretas únicamente desde `lib/main.dart`.
 
 **Punto de control**: Probar independientemente los cuatro cálculos válidos en dominio y el cálculo principal desde la pantalla.
 
@@ -70,14 +70,14 @@ implementarse y probarse de manera independiente.
 
 ### Pruebas de la historia de usuario 2
 
-- [ ] T016 [P] [US2] Añadir a los datos de prueba los casos de 0 personas y monto «abc» con los mensajes esperados en `test/casos_de_prueba.dart`.
-- [ ] T017 [US2] Añadir pruebas unitarias que validen exactamente los errores «Debe haber al menos una persona» y «Monto inválido», y que no calculen resultado, en `test/division_test.dart`.
-- [ ] T018 [P] [US2] Crear pruebas de widget para los errores de 0 personas y monto «abc», verificando que no aparece resultado, en `test/pantalla_test.dart`.
+- [X] T016 [P] [US2] Añadir a los datos de prueba los casos de 0 personas y monto «abc» con los mensajes esperados en `test/casos_de_prueba.dart`.
+- [X] T017 [US2] Añadir pruebas unitarias que validen exactamente los errores «Debe haber al menos una persona» y «Monto inválido», y que no calculen resultado, en `test/division_test.dart`.
+- [X] T018 [P] [US2] Crear pruebas de widget para los errores de 0 personas y monto «abc», verificando que no aparece resultado, en `test/pantalla_test.dart`.
 
 ### Integración de la historia de usuario 2
 
-- [ ] T019 [US2] Integrar ValidarEntrada con DivisorController para mostrar el error y limpiar cualquier resultado previo cuando los datos no sean válidos en `lib/presentation/divisor_controller.dart`.
-- [ ] T020 [US2] Integrar el estado de error y la ausencia de resultado cuando corresponda en `lib/presentation/pantalla_divisor.dart`.
+- [X] T019 [US2] Integrar ValidarEntrada con DivisorController para mostrar el error y limpiar cualquier resultado previo cuando los datos no sean válidos en `lib/presentation/divisor_controller.dart`.
+- [X] T020 [US2] Integrar el estado de error y la ausencia de resultado cuando corresponda en `lib/presentation/pantalla_divisor.dart`.
 
 **Punto de control**: Probar ambos errores independientemente, sin resultado visible.
 
@@ -85,13 +85,13 @@ implementarse y probarse de manera independiente.
 
 **Propósito**: Validar integración, análisis estático y construcción Android.
 
-- [ ] T021 [P] Revisar que `lib/domain/` no importe `package:flutter` en los archivos de `lib/domain/`.
-- [ ] T022 [P] Revisar que las instancias concretas RedondeoExacto y RedondeoHaciaArriba solo se creen en `lib/main.dart`.
-- [ ] T023 [P] Revisar que CalcularDivision no compruebe tipos concretos de EstrategiaRedondeo en `lib/domain/calcular_division.dart`.
-- [ ] T024 Ejecutar `flutter test` desde `divisor_cuenta/` y confirmar que pasan los seis casos, la sustitución de estrategias y las pruebas de widget.
-- [ ] T025 Ejecutar `flutter analyze` desde `divisor_cuenta/` y resolver cualquier issue atribuible a esta funcionalidad.
-- [ ] T026 Ejecutar `flutter build apk --debug` desde `divisor_cuenta/` y confirmar que se genera el APK.
-- [ ] T027 [P] Revisar que la app no use conexiones de red ni almacenamiento en base de datos y que no se hayan agregado dependencias externas en `pubspec.yaml` y `lib/`.
+- [X] T021 [P] Revisar que `lib/domain/` no importe `package:flutter` en los archivos de `lib/domain/`.
+- [X] T022 [P] Revisar que las instancias concretas RedondeoExacto y RedondeoHaciaArriba solo se creen en `lib/main.dart`.
+- [X] T023 [P] Revisar que CalcularDivision no compruebe tipos concretos de EstrategiaRedondeo en `lib/domain/calcular_division.dart`.
+- [X] T024 Ejecutar `flutter test` desde `divisor_cuenta/` y confirmar que pasan los seis casos, la sustitución de estrategias y las pruebas de widget.
+- [X] T025 Ejecutar `flutter analyze` desde `divisor_cuenta/` y resolver cualquier issue atribuible a esta funcionalidad.
+- [X] T026 Ejecutar `flutter build apk --debug` desde `divisor_cuenta/` y confirmar que se genera el APK.
+- [X] T027 [P] Revisar que la app no use conexiones de red ni almacenamiento en base de datos y que no se hayan agregado dependencias externas en `pubspec.yaml` y `lib/`.
 
 ## Dependencias y orden de ejecución
 
