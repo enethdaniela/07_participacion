@@ -1,122 +1,303 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const DivisorCuentaApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class DivisorCuentaApp extends StatelessWidget {
+  const DivisorCuentaApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    const verde = Color(0xFF176B55);
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'Divide la cuenta',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: verde),
+        scaffoldBackgroundColor: const Color(0xFFF5F7F3),
+        useMaterial3: true,
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: const Color(0xFFF7F8F6),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: Color(0xFFE6EAE5)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: verde, width: 1.5),
+          ),
+        ),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const PantallaDivisor(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class PantallaDivisor extends StatefulWidget {
+  const PantallaDivisor({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<PantallaDivisor> createState() => _PantallaDivisorState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _PantallaDivisorState extends State<PantallaDivisor> {
+  final _montoController = TextEditingController();
+  final _personasController = TextEditingController();
 
-  void _incrementCounter() {
+  double? _pagoPorPersona;
+  String? _error;
+
+  @override
+  void dispose() {
+    _montoController.dispose();
+    _personasController.dispose();
+    super.dispose();
+  }
+
+  void _calcular() {
+    final monto = double.tryParse(
+      _montoController.text.trim().replaceAll(',', '.'),
+    );
+    final personas = int.tryParse(_personasController.text.trim());
+
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _pagoPorPersona = null;
+      if (monto == null || !monto.isFinite || monto < 0) {
+        _error = 'Ingresa un monto válido.';
+      } else if (personas == null || personas < 1) {
+        _error = 'El número de personas debe ser al menos 1.';
+      } else {
+        _error = null;
+        _pagoPorPersona = monto / personas;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    const verde = Color(0xFF176B55);
+
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        backgroundColor: const Color(0xFFF5F7F3),
+        title: const Text(
+          'Divide la cuenta',
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
+        centerTitle: true,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: verde,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(Icons.receipt_long, color: Colors.white, size: 30),
+                        SizedBox(height: 18),
+                        Text(
+                          'Una cuenta,\nentre todos.',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            height: 1.15,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Ingresa los datos y calcula cuánto paga cada persona.',
+                          style: TextStyle(
+                            color: Color(0xFFD9EEE7),
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x0D18342B),
+                          blurRadius: 18,
+                          offset: Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Text(
+                          'Detalles de la cuenta',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+                        _CampoEntrada(
+                          label: 'Monto total',
+                          hint: 'Ej. 80.00',
+                          prefixText: '\$ ',
+                          controller: _montoController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'[0-9.,]'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 14),
+                        _CampoEntrada(
+                          label: 'Personas',
+                          hint: 'Ej. 4',
+                          controller: _personasController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        FilledButton.icon(
+                          onPressed: _calcular,
+                          icon: const Icon(Icons.calculate_outlined),
+                          label: const Text('Calcular división'),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: verde,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            textStyle: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                        ),
+                        if (_error != null) ...[
+                          const SizedBox(height: 14),
+                          Text(
+                            _error!,
+                            style: const TextStyle(
+                              color: Color(0xFFB3261E),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  if (_pagoPorPersona case final pago?) ...[
+                    Container(
+                      padding: const EdgeInsets.all(22),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE6F2EC),
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: Column(
+                        children: [
+                          const Text(
+                            'CADA PERSONA PAGA',
+                            style: TextStyle(
+                              color: Color(0xFF47685D),
+                              fontSize: 12,
+                              letterSpacing: 1.2,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            '\$${pago.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              color: verde,
+                              fontSize: 38,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ] else if (_error == null) ...[
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Text(
+                        'El resultado aparecerá aquí.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Color(0xFF68746E)),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
             ),
-          ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+    );
+  }
+}
+
+class _CampoEntrada extends StatelessWidget {
+  const _CampoEntrada({
+    required this.label,
+    required this.hint,
+    required this.controller,
+    required this.keyboardType,
+    required this.inputFormatters,
+    this.prefixText,
+  });
+
+  final String label;
+  final String hint;
+  final TextEditingController controller;
+  final TextInputType keyboardType;
+  final List<TextInputFormatter> inputFormatters;
+  final String? prefixText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          keyboardType: keyboardType,
+          inputFormatters: inputFormatters,
+          decoration: InputDecoration(hintText: hint, prefixText: prefixText),
+        ),
+      ],
     );
   }
 }
