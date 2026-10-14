@@ -22,6 +22,9 @@ class ValidarEntrada {
     if (porcentaje == null || !porcentaje.isFinite || porcentaje < 0) {
       throw const FormatException('Propina inválida');
     }
+    if (porcentaje > 100) {
+      throw const FormatException('La propina no puede superar el 100%');
+    }
 
     return Cuenta(
       monto: montoNumerico,
