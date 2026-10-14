@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../domain/estrategia_redondeo.dart';
+import '../domain/resultado.dart';
 import 'divisor_controller.dart';
 import 'formateador_moneda.dart';
 
@@ -69,188 +70,182 @@ class _PantallaDivisorState extends State<PantallaDivisor> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: verde,
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Icons.receipt_long, color: Colors.white, size: 30),
-                        SizedBox(height: 16),
-                        Text(
-                          'Una cuenta,\nentre todos.',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 28,
-                            height: 1.15,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Calcula cuánto paga cada persona.',
-                          style: TextStyle(color: Color(0xFFD9EEE7)),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _construirEncabezado(verde),
                   const SizedBox(height: 18),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const Text(
-                          'Detalles de la cuenta',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        _CampoEntrada(
-                          campoKey: const ValueKey('monto'),
-                          controller: _montoController,
-                          etiqueta: 'Monto total',
-                          pista: 'Ej. 100.00',
-                          prefijo: '\$ ',
-                          teclado: const TextInputType.numberWithOptions(
-                            decimal: true,
-                          ),
-                          formato: [
-                            FilteringTextInputFormatter.allow(
-                              RegExp(r'[0-9.,]'),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 14),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _CampoEntrada(
-                                campoKey: const ValueKey('personas'),
-                                controller: _personasController,
-                                etiqueta: 'Personas',
-                                pista: 'Ej. 4',
-                                teclado: TextInputType.number,
-                                formato: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: _CampoEntrada(
-                                campoKey: const ValueKey('propina'),
-                                controller: _propinaController,
-                                etiqueta: 'Propina',
-                                pista: '0',
-                                sufijo: '%',
-                                teclado: const TextInputType.numberWithOptions(
-                                  decimal: true,
-                                ),
-                                formato: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'[0-9.,]'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 18),
-                        const Text(
-                          'Modo de redondeo',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 8),
-                        SegmentedButton<ModoRedondeo>(
-                          segments: const [
-                            ButtonSegment(
-                              value: ModoRedondeo.exacto,
-                              label: Text('Exacto'),
-                            ),
-                            ButtonSegment(
-                              value: ModoRedondeo.haciaArriba,
-                              label: Text('Hacia arriba'),
-                            ),
-                          ],
-                          selected: {_modo},
-                          onSelectionChanged: (seleccion) {
-                            setState(() => _modo = seleccion.first);
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        FilledButton.icon(
-                          key: const ValueKey('calcular'),
-                          onPressed: _calcular,
-                          icon: const Icon(Icons.calculate_outlined),
-                          label: const Text('Calcular'),
-                          style: FilledButton.styleFrom(
-                            backgroundColor: verde,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                          ),
-                        ),
-                        if (error != null) ...[
-                          const SizedBox(height: 14),
-                          Text(
-                            error,
-                            key: const ValueKey('error'),
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Color(0xFFB3261E),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  if (resultado != null) ...[
-                    const SizedBox(height: 16),
-                    Container(
-                      key: const ValueKey('resultado'),
-                      padding: const EdgeInsets.all(22),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE6F2EC),
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'CADA PERSONA PAGA',
-                            style: TextStyle(
-                              color: Color(0xFF47685D),
-                              fontSize: 12,
-                              letterSpacing: 1.2,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '\$${_formateador.formatear(resultado.montoPorPersona)}',
-                            style: const TextStyle(
-                              color: verde,
-                              fontSize: 38,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  _construirFormulario(error, verde),
+                  if (resultado != null) _construirResultado(resultado, verde),
                 ],
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _construirEncabezado(Color verde) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: verde,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.receipt_long, color: Colors.white, size: 30),
+          SizedBox(height: 16),
+          Text(
+            'Una cuenta,\nentre todos.',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 28,
+              height: 1.15,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Calcula cuánto paga cada persona.',
+            style: TextStyle(color: Color(0xFFD9EEE7)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _construirFormulario(String? error, Color verde) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text(
+            'Detalles de la cuenta',
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 16),
+          _CampoEntrada(
+            campoKey: const ValueKey('monto'),
+            controller: _montoController,
+            etiqueta: 'Monto total',
+            pista: 'Ej. 100.00',
+            prefijo: '\$ ',
+            teclado: const TextInputType.numberWithOptions(decimal: true),
+            formato: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(
+                child: _CampoEntrada(
+                  campoKey: const ValueKey('personas'),
+                  controller: _personasController,
+                  etiqueta: 'Personas',
+                  pista: 'Ej. 4',
+                  teclado: TextInputType.number,
+                  formato: [FilteringTextInputFormatter.digitsOnly],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _CampoEntrada(
+                  campoKey: const ValueKey('propina'),
+                  controller: _propinaController,
+                  etiqueta: 'Propina',
+                  pista: '0',
+                  sufijo: '%',
+                  teclado: const TextInputType.numberWithOptions(decimal: true),
+                  formato: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          const Text(
+            'Modo de redondeo',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 8),
+          SegmentedButton<ModoRedondeo>(
+            segments: const [
+              ButtonSegment(value: ModoRedondeo.exacto, label: Text('Exacto')),
+              ButtonSegment(
+                value: ModoRedondeo.haciaArriba,
+                label: Text('Hacia arriba'),
+              ),
+            ],
+            selected: {_modo},
+            onSelectionChanged: (seleccion) {
+              setState(() => _modo = seleccion.first);
+            },
+          ),
+          const SizedBox(height: 20),
+          FilledButton.icon(
+            key: const ValueKey('calcular'),
+            onPressed: _calcular,
+            icon: const Icon(Icons.calculate_outlined),
+            label: const Text('Calcular'),
+            style: FilledButton.styleFrom(
+              backgroundColor: verde,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+          ),
+          if (error != null) ...[
+            const SizedBox(height: 14),
+            Text(
+              error,
+              key: const ValueKey('error'),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Color(0xFFB3261E),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _construirResultado(Resultado resultado, Color verde) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Container(
+        key: const ValueKey('resultado'),
+        padding: const EdgeInsets.all(22),
+        decoration: BoxDecoration(
+          color: const Color(0xFFE6F2EC),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Column(
+          children: [
+            const Text(
+              'CADA PERSONA PAGA',
+              style: TextStyle(
+                color: Color(0xFF47685D),
+                fontSize: 12,
+                letterSpacing: 1.2,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '\$${_formateador.formatear(resultado.montoPorPersona)}',
+              style: TextStyle(
+                color: verde,
+                fontSize: 38,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
         ),
       ),
     );
