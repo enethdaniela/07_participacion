@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+enum _ModoRedondeo { exacto, haciaArriba }
+
 void main() {
   runApp(const DivisorCuentaApp());
 }
@@ -50,7 +52,9 @@ class PantallaDivisor extends StatefulWidget {
 class _PantallaDivisorState extends State<PantallaDivisor> {
   final _montoController = TextEditingController();
   final _personasController = TextEditingController();
+  final _propinaController = TextEditingController(text: '0');
 
+  _ModoRedondeo _modoRedondeo = _ModoRedondeo.exacto;
   double? _pagoPorPersona;
   String? _error;
 
@@ -58,6 +62,7 @@ class _PantallaDivisorState extends State<PantallaDivisor> {
   void dispose() {
     _montoController.dispose();
     _personasController.dispose();
+    _propinaController.dispose();
     super.dispose();
   }
 
@@ -66,16 +71,27 @@ class _PantallaDivisorState extends State<PantallaDivisor> {
       _montoController.text.trim().replaceAll(',', '.'),
     );
     final personas = int.tryParse(_personasController.text.trim());
+    final propina = double.tryParse(
+      _propinaController.text.trim().replaceAll(',', '.'),
+    );
 
     setState(() {
       _pagoPorPersona = null;
       if (monto == null || !monto.isFinite || monto < 0) {
-        _error = 'Ingresa un monto válido.';
+        _error = 'Monto inválido';
       } else if (personas == null || personas < 1) {
-        _error = 'El número de personas debe ser al menos 1.';
+        _error = personas == 0
+            ? 'Debe haber al menos una persona'
+            : 'Número de personas inválido';
+      } else if (propina == null || !propina.isFinite || propina < 0) {
+        _error = 'Propina inválida';
       } else {
         _error = null;
-        _pagoPorPersona = monto / personas;
+        final totalConPropina = monto * (1 + propina / 100);
+        final pago = totalConPropina / personas;
+        _pagoPorPersona = _modoRedondeo == _ModoRedondeo.haciaArriba
+            ? pago.ceilToDouble()
+            : pago;
       }
     });
   }
@@ -166,11 +182,6 @@ class _PantallaDivisorState extends State<PantallaDivisor> {
                           keyboardType: const TextInputType.numberWithOptions(
                             decimal: true,
                           ),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                              RegExp(r'[0-9.,]'),
-                            ),
-                          ],
                         ),
                         const SizedBox(height: 14),
                         _CampoEntrada(
@@ -181,6 +192,37 @@ class _PantallaDivisorState extends State<PantallaDivisor> {
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                           ],
+                        ),
+                        const SizedBox(height: 14),
+                        _CampoEntrada(
+                          label: 'Propina (%)',
+                          hint: 'Ej. 10',
+                          controller: _propinaController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        DropdownButtonFormField<_ModoRedondeo>(
+                          key: const Key('modo-redondeo'),
+                          initialValue: _modoRedondeo,
+                          decoration: const InputDecoration(
+                            labelText: 'Modo de redondeo',
+                          ),
+                          items: const [
+                            DropdownMenuItem(
+                              value: _ModoRedondeo.exacto,
+                              child: Text('Exacto'),
+                            ),
+                            DropdownMenuItem(
+                              value: _ModoRedondeo.haciaArriba,
+                              child: Text('Hacia arriba'),
+                            ),
+                          ],
+                          onChanged: (modo) {
+                            if (modo == null) return;
+                            setState(() => _modoRedondeo = modo);
+                          },
                         ),
                         const SizedBox(height: 20),
                         FilledButton.icon(
@@ -270,7 +312,7 @@ class _CampoEntrada extends StatelessWidget {
     required this.hint,
     required this.controller,
     required this.keyboardType,
-    required this.inputFormatters,
+    this.inputFormatters = const [],
     this.prefixText,
   });
 
