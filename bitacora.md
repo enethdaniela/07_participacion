@@ -4,11 +4,11 @@ Estado actual: la Parte 1 está completada y se implementó la primera app en la
 
 | | rama vibe | rama sdd |
 |---|---|---|
-| Iteraciones (veces que le tuviste que volver a pedir algo) | 0 | Pendiente |
-| Casos de aceptación que cumple (0–6) | Pendiente de evaluar | 6/6 |
-| Pruebas automatizadas que pasan | 1 widget test | 10 |
+| Iteraciones (veces que le tuviste que volver a pedir algo) | 1 | Pendiente |
+| Casos de aceptación que cumple (0–6) | 6/6 | 6/6 |
+| Pruebas automatizadas que pasan | 6 | 12 |
 | Archivos en `lib/` | 1 | 11 |
-| Líneas de código en `lib/` | 288 | 485 |
+| Líneas de código en `lib/` | 329 | 485 |
 | ¿`domain/` depende de Flutter? | No existe `domain/` | No |
 | ¿Existe separación `presentation/domain/data`? | No | Sí |
 | ¿El agente agregó algo que nadie pidió? | No; solo reparto básico | No; se implementó lo definido en la especificación |
@@ -43,3 +43,5 @@ Nota de la Parte 1:
 - Verificación SDD: `flutter analyze` sin issues; `flutter test` con 10 pruebas aprobadas; `flutter build apk --debug` exitoso. No se modificó `pubspec.yaml`; la búsqueda de arquitectura confirmó que no hay imports Flutter en `domain/`, las estrategias concretas solo se crean en `main.dart`, el cálculo no inspecciona sus tipos y no se agregaron red, base de datos ni dependencias.
 - Métricas de implementación SDD: 11 archivos Dart y 485 líneas en `lib/`. La cantidad de iteraciones y la comparación final de ambas ramas quedan pendientes de la evaluación global.
 - La revisión documental de `checklists/arquitectura.md` quedó completa (9/9); las tareas de implementación/validación T001–T027 están completadas.
+- Tras la evaluación inicial se hizo una iteración en `vibe` para implementar propina y los dos modos de redondeo, además de los mensajes de error exigidos. Sus seis pruebas de aceptación pasan; `flutter analyze` no reporta issues y `flutter build apk --debug` termina correctamente.
+- Al ejecutar temporalmente las pruebas de `sdd` en `vibe`, la compilación falló porque `lib/data/redondeo_exacto.dart` no existe en esa rama. Esto evidencia la diferencia de estructura/testabilidad; no es por sí solo un fallo funcional. Se restauró `test/` a la versión de `vibe` después de la comparación.
